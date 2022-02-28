@@ -2,7 +2,7 @@
 
 '''Install dependencies:
 
-source .venv/bin/activate
+source .env\Scripts\activate
 pip install -r requirements.txt
 '''
 
