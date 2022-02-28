@@ -1,12 +1,14 @@
 # backend
 
-'''Install dependencies:
+## Install dependencies
 
+```bash
 source .env\Scripts\activate
 pip install -r requirements.txt
-'''
+```
 
-'''Usage:
+## Usage
 
+```bash
 python -m backend
-'''
+```
