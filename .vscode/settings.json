@@ -1,0 +1,14 @@
+{
+    "search.exclude": {
+        ".gitignore": true,
+        ".venv": true,
+        "*.pyc": true,
+        "**/__pycache__": true
+    },
+    "files.exclude": {
+        ".gitignore": true,
+        ".venv": true,
+        "*.pyc": true,
+        "**/__pycache__": true
+    }
+}
