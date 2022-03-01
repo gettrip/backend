@@ -1,6 +1,10 @@
+import logging
+
 from http import HTTPStatus
 from flask import Flask, jsonify, request
 from uuid import uuid4
+
+logger = logging.getLogger(__name__)
 
 cities_storage = {
     "e594e65ae5f7441f89d8e9acdc378a73": {
@@ -28,7 +32,7 @@ cities_storage = {
 
 def city_validation(city):
     cityname = city['cityname']
-    print(cityname)
+    logger.info(cityname)
     if not cityname:
         return
     
