@@ -1,8 +1,12 @@
 import logging
 
-from backend.cities import app
+from flask import Flask
+from backend.cities import cities
 
 logger = logging.getLogger(__name__)
+
+app = Flask(__name__)
+app.register_blueprint(cities, url_prefix='/api/v1/cities')
 
 
 def main():
