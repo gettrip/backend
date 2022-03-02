@@ -1,7 +1,7 @@
 import logging
 
 from http import HTTPStatus
-from flask import Flask, jsonify, request
+from flask import jsonify, request, Blueprint
 from uuid import uuid4
 
 logger = logging.getLogger(__name__)
@@ -45,16 +45,16 @@ def city_validation(city):
     return city
 
 
-app = Flask(__name__)
+cities = Blueprint('cities', __name__)
 
 
-@app.get('/api/cities/')
+@cities.get('/')
 def get_cities():
     cities = [city for city in cities_storage.values()]
     return jsonify(cities)
 
 
-@app.get('/api/cities/<uid>')
+@cities.get('/<uid>')
 def get_by_id(uid):
     city = cities_storage.get(uid)
     if not city:
@@ -63,7 +63,7 @@ def get_by_id(uid):
     return city
 
 
-@app.post('/api/cities/')
+@cities.post('/')
 def add_city():
     city = request.json
     valid_city = city_validation(city)
@@ -75,7 +75,7 @@ def add_city():
     return city, HTTPStatus.CREATED
 
 
-@app.put('/api/cities/<uid>')
+@cities.put('/<uid>')
 def update_city(uid):
     if uid not in cities_storage:
         return {'message': 'city not found'}, HTTPStatus.NOT_FOUND
@@ -89,7 +89,7 @@ def update_city(uid):
     return city, HTTPStatus.OK
 
 
-@app.delete('/api/cities/<uid>')
+@cities.delete('/<uid>')
 def delete_city(uid):
     if uid not in cities_storage:
         return {'message': 'city not found'}, HTTPStatus.NOT_FOUND
