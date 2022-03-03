@@ -20,7 +20,7 @@ user_storage = {
 
 logger = logging.getLogger(__name__)
 
-# create user
+""" create user """
 @user.post('/')
 def add_user():
     try:
@@ -31,13 +31,13 @@ def add_user():
     user_storage[user['uid']] = user
     return user, HTTPStatus.CREATED
 
-# get all users
+""" get all users """
 @user.get('/')
 def get_users():
     users = [user for _, user in user_storage.items()]
     return jsonify(users), HTTPStatus.OK
 
-# get user by uid
+""" get user by uid """
 @user.get('/<uid>')
 def get_by_id(uid):
     user = user_storage.get(uid)
@@ -45,7 +45,7 @@ def get_by_id(uid):
         return {'message': 'user not found'}, HTTPStatus.NOT_FOUND
     return user, HTTPStatus.OK
 
-# update user
+""" update user """
 @user.put('/<uid>')
 def update_user(uid):
     if uid not in user_storage:
@@ -57,7 +57,7 @@ def update_user(uid):
     user_storage[user['uid']] = user
     return user, HTTPStatus.OK
 
-# delete user
+""" delete user """
 @user.delete('/<uid>')
 def delete_user(uid):
     if uid not in user_storage:
