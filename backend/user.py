@@ -18,7 +18,6 @@ user_storage = {
     },
 }
 
-app = Flask(__name__)
 logger = logging.getLogger(__name__)
 
 # create user
