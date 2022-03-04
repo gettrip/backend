@@ -6,8 +6,8 @@
         "**/__pycache__": true
     },
     "files.exclude": {
-        ".gitignore": true,
-        ".venv": true,
+        ".gitignore": false,
+        ".venv": false,
         "*.pyc": true,
         "**/__pycache__": true
     }
