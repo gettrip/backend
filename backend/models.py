@@ -5,12 +5,12 @@ from backend.db import Base, engine
 class City(Base):
     __tablename__ = 'cities'
 
-    id = Column(String(), primary_key=True)
-    cityname = Column(String(), unique=True)
+    uid = Column(String(), primary_key=True)
+    name = Column(String(), unique=True, nullable=False)
 
     def __repr__(self) -> str:
-        return f'User {self.id}, {self.cityname}'
-        
+        return f'User {self.uid}, {self.name}'
+
 
 def main():    
     Base.metadata.create_all(bind=engine)
