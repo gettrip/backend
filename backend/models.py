@@ -1,7 +1,5 @@
 from sqlalchemy import Column, String
-from backend.db import Base
-
-# TODO: to solve imports issue.
+from backend.db import Base, engine
 
 
 class City(Base):
@@ -14,8 +12,7 @@ class City(Base):
         return f'User {self.id}, {self.cityname}'
         
 
-def main():
-    from db import Base, engine
+def main():    
     Base.metadata.create_all(bind=engine)
 
 

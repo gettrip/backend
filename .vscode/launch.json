@@ -7,6 +7,13 @@
             "request": "launch",
             "module": "backend",
             "console": "internalConsole",
+        },
+        {
+            "name": "create_db",
+            "type": "python",
+            "request": "launch",
+            "module": "backend.models",
+            "console": "internalConsole",
         }
     ]
 }
