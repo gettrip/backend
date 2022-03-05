@@ -1,8 +1,12 @@
 import logging
+import sqlalchemy.exc
 
 from http import HTTPStatus
 from flask import jsonify, request, Blueprint
 from uuid import uuid4
+from backend.db import db_session
+from backend.models import City
+
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +45,7 @@ def city_validation(city):
 
     # TODO: check city with "-" like "Петропавловск-камчатский"
 
-    city['cityname'] = cityname.capitalize()
+    city = cityname.capitalize()
     return city
 
 
@@ -66,14 +70,20 @@ def get_by_id(uid):
 @cities.post('/')
 def add_city():
     city = request.json
-    valid_city = city_validation(city)
-    if not valid_city:
+    city['cityname'] = city_validation(city)    
+    if not city['cityname']:
         return {'message': 'incorrect input'}, HTTPStatus.BAD_REQUEST
 
-    city['uid'] = uuid4().hex
-    cities_storage[city['uid']] = valid_city
+    city['uid'] = uuid4().hex     
+    try:
+        city_add = City(id = city['uid'], cityname = city['cityname'])
+        db_session.add(city_add)
+        db_session.commit()
+    except sqlalchemy.exc.IntegrityError:
+        return {'message': 'city already exist'}, HTTPStatus.BAD_REQUEST
+        
     return city, HTTPStatus.CREATED
-
+   
 
 @cities.put('/<uid>')
 def update_city(uid):
@@ -96,4 +106,3 @@ def delete_city(uid):
 
     cities_storage.pop(uid)
     return {}, HTTPStatus.NO_CONTENT
-    
