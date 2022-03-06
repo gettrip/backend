@@ -9,7 +9,7 @@ class City(Base):
     name = Column(String(), unique=True, nullable=False)
 
     def __repr__(self) -> str:
-        return f'User {self.uid}, {self.name}'
+        return f'City {self.uid}, {self.name}'
 
 
 def main():    
