@@ -16,7 +16,7 @@ class User(Base):
     __tablename__ = 'users'
 
     uid = Column(String(), primary_key=True)
-    name = Column(String(), unique=True, nullable=False)
+    name = Column(String(), unique=True)
 
     def __repr__(self) -> str:
         return f'User {self.uid}, {self.name}'
