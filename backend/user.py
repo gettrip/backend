@@ -1,22 +1,14 @@
-from http import HTTPStatus
-from http.client import BAD_REQUEST
-from flask import Flask, jsonify, request, Blueprint
-from uuid import uuid4
 import logging
 import werkzeug.exceptions
+import sqlalchemy.exc
+from http import HTTPStatus
+from http.client import BAD_REQUEST
+from flask import jsonify, request, Blueprint
+from backend.db import db_session
+from uuid import uuid4
+from backend.models import User
 
 user = Blueprint('user', __name__)
-
-user_storage = {
-    "e7b3d405ac9a45758109f3daee0adfae": {
-        "uid": "e7b3d405ac9a45758109f3daee0adfae", 
-        "username": "ivanov",
-    },
-    "3074db5ea6064b75b5c8e13d0415a4e3": {
-        "uid": "3074db5ea6064b75b5c8e13d0415a4e3", 
-        "username": "petrov",
-    },
-}
 
 logger = logging.getLogger(__name__)
 
@@ -24,43 +16,63 @@ logger = logging.getLogger(__name__)
 @user.post('/')
 def add_user():
     try:
-        user = request.json
+        user_data = request.json
+        uid = uuid4().hex
+        new_user = User(uid = uid, name = user_data['name'])
+        db_session.add(new_user)
+        db_session.commit()
     except werkzeug.exceptions.BadRequest:
         return {"message": "user's data is incorrect"}, HTTPStatus.BAD_REQUEST
-    user['uid'] = uuid4().hex
-    user_storage[user['uid']] = user
-    return user, HTTPStatus.CREATED
+    except sqlalchemy.exc.IntegrityError:
+        return {"message": "user already exist"}, HTTPStatus.UNPROCESSABLE_ENTITY
+    except:
+        logger.exception("message")
+        return 
+    return f'{new_user} successfully added', HTTPStatus.CREATED
 
 """ get all users """
 @user.get('/')
 def get_users():
-    users = [user for _, user in user_storage.items()]
-    return jsonify(users), HTTPStatus.OK
+    all_users = User.query.all()
+    all_users_lst = [{'name': user.name, 'uid': user.uid} for user in all_users ]
+    return jsonify(all_users_lst), HTTPStatus.OK
 
 """ get user by uid """
 @user.get('/<uid>')
 def get_by_id(uid):
-    user = user_storage.get(uid)
+    user = User.query.filter(User.uid == uid).first()
     if not user:
         return {'message': 'user not found'}, HTTPStatus.NOT_FOUND
-    return user, HTTPStatus.OK
-
-""" update user """
-@user.put('/<uid>')
-def update_user(uid):
-    if uid not in user_storage:
-        return {"message": "user not found"}, HTTPStatus.NOT_FOUND
-    try:
-        user = request.json
-    except werkzeug.exceptions.BadRequest:
-        return {"message": "user's data is incorrect"},  HTTPStatus.BAD_REQUEST
-    user_storage[user['uid']] = user
-    return user, HTTPStatus.OK
+    return jsonify([{'name': user.name, 'uid': user.uid}]), HTTPStatus.OK
 
 """ delete user """
 @user.delete('/<uid>')
 def delete_user(uid):
-    if uid not in user_storage:
+    user = User.query.filter(User.uid == uid).first()
+    if not user:
         return {"message": "user not found"}, HTTPStatus.NOT_FOUND
-    user_storage.pop(uid)
-    return {"message": "user was successfully deleted"}, HTTPStatus.NO_CONTENT
+    db_session.delete(user)
+    db_session.commit()
+    return {"message": "user was successfully deleted"}, HTTPStatus.OK
+
+""" update user """
+@user.put('/<uid>')
+def update_user(uid):
+    user = User.query.filter(User.uid == uid).first()
+    if not user:
+        return {"message": "user not found"}, HTTPStatus.NOT_FOUND
+    try:
+        new_data = request.json
+        user.name = new_data['name']
+        db_session.commit()
+    except werkzeug.exceptions.BadRequest:
+        return {"message": "user's data is incorrect"},  HTTPStatus.BAD_REQUEST
+    except KeyError:
+        return {"message": "user's data is incorrect"},  HTTPStatus.BAD_REQUEST
+    except sqlalchemy.exc.IntegrityError:
+        return {"message": "user already exist"}, HTTPStatus.UNPROCESSABLE_ENTITY
+    except:
+        logger.exception("message")
+        return
+    return f'{user} successfully updated', HTTPStatus.OK
+
