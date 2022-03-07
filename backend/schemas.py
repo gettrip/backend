@@ -1,7 +1,9 @@
-from  pydantic import BaseModel
+from  pydantic import BaseModel, constr
 
-class CitySchema(BaseModel):
-    uid: str
+class City(BaseModel):        
     name: str
-    description: str
-    
+    name: constr(min_length=1)
+        
+
+    class Config:
+        orm_mode=True
