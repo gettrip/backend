@@ -1,12 +1,11 @@
 import logging
-import werkzeug.exceptions
+import sqlalchemy.exc
 
 from http import HTTPStatus
 from flask import jsonify, request, Blueprint
-from uuid import uuid4
+from backend.errors import Conflict
 from backend.db import db_session
 from backend.models import City
-from pydantic import ValidationError
 from backend import schemas
 
 
@@ -34,17 +33,14 @@ def get_by_id(uid):
 def add_city():
     try:     
         payload = request.json        
-        new_city = schemas.City(**payload)        
-    except ValidationError as e:             
-        return e.json(), HTTPStatus.BAD_REQUEST             
-    except werkzeug.exceptions.BadRequest:
-        return {"message": "incorrect input"}, HTTPStatus.BAD_REQUEST
+        new_city = schemas.City(**payload)   
+        city = City(name=new_city.name)
+        db_session.add(city)
+        db_session.commit()           
+        new_city = schemas.City.from_orm(city)
+    except sqlalchemy.exc.IntegrityError:
+        raise Conflict('city')
 
-    city = City(name=new_city.name)
-    db_session.add(city)
-    db_session.commit()           
-    new_city = schemas.City.from_orm(city)
-    
     return new_city.dict(), HTTPStatus.CREATED
    
 
@@ -57,14 +53,11 @@ def update_city(uid):
     try:
         payload = request.json
         new_city = schemas.City(**payload)
-    except ValidationError as e:             
-        return e.json(), HTTPStatus.BAD_REQUEST
-    except werkzeug.exceptions.BadRequest:
-        return {'message': 'incorrect input'}, HTTPStatus.BAD_REQUEST
-
-    city.name = new_city.name
-    db_session.commit()    
-    new_city = schemas.City.from_orm(city)    
+        city.name = new_city.name
+        db_session.commit()    
+        new_city = schemas.City.from_orm(city)
+    except sqlalchemy.exc.IntegrityError:
+        raise Conflict('city')        
 
     return new_city.dict(), HTTPStatus.OK
 

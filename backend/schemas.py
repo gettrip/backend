@@ -1,7 +1,6 @@
 from  pydantic import BaseModel, constr
 
-class City(BaseModel):        
-    name: str
+class City(BaseModel):            
     name: constr(min_length=1)
         
 
