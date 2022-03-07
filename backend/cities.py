@@ -1,5 +1,4 @@
 import logging
-import sqlalchemy.exc
 import werkzeug.exceptions
 
 from http import HTTPStatus
@@ -7,6 +6,8 @@ from flask import jsonify, request, Blueprint
 from uuid import uuid4
 from backend.db import db_session
 from backend.models import City
+from pydantic import ValidationError
+from backend.schemas import CitySchema
 
 
 logger = logging.getLogger(__name__)
@@ -31,21 +32,21 @@ def get_by_id(uid):
 
 @cities.post('/')
 def add_city():
-    try:
-        city = request.json
+    try:     
+        payload = request.json
+        payload['uid'] = uuid4().hex
+        new_city = CitySchema(**payload)        
+    except ValidationError as e:             
+        return e.json(), HTTPStatus.BAD_REQUEST             
     except werkzeug.exceptions.BadRequest:
-        return {'message': 'incorrect input'}, HTTPStatus.BAD_REQUEST
-    city['uid'] = uuid4().hex     
-    try:
-        city_add = City(uid = city['uid'], name = city['name'])
-        db_session.add(city_add)
-        db_session.commit()
-    except sqlalchemy.exc.IntegrityError:
-        return {'message': 'city already exist'}, HTTPStatus.BAD_REQUEST
-    except KeyError:
-        return {'message': 'input is empty'}, HTTPStatus.BAD_REQUEST
+        return {"message": "data is incorrect"}, HTTPStatus.BAD_REQUEST
 
-    return city, HTTPStatus.CREATED
+    city = City(uid=new_city.uid, name=new_city.name)
+    db_session.add(city)
+    db_session.commit()       
+
+    
+    return new_city.dict(), HTTPStatus.CREATED
    
 
 @cities.put('/<uid>')
