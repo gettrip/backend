@@ -7,7 +7,7 @@ from uuid import uuid4
 from backend.db import db_session
 from backend.models import City
 from pydantic import ValidationError
-from backend.schemas import CitySchema
+from backend import schemas
 
 
 logger = logging.getLogger(__name__)
@@ -33,18 +33,17 @@ def get_by_id(uid):
 @cities.post('/')
 def add_city():
     try:     
-        payload = request.json
-        payload['uid'] = uuid4().hex
-        new_city = CitySchema(**payload)        
+        payload = request.json        
+        new_city = schemas.City(**payload)        
     except ValidationError as e:             
         return e.json(), HTTPStatus.BAD_REQUEST             
     except werkzeug.exceptions.BadRequest:
-        return {"message": "data is incorrect"}, HTTPStatus.BAD_REQUEST
+        return {"message": "incorrect input"}, HTTPStatus.BAD_REQUEST
 
-    city = City(uid=new_city.uid, name=new_city.name)
+    city = City(name=new_city.name)
     db_session.add(city)
-    db_session.commit()       
-
+    db_session.commit()           
+    new_city = schemas.City.from_orm(city)
     
     return new_city.dict(), HTTPStatus.CREATED
    
@@ -56,12 +55,18 @@ def update_city(uid):
         return {'message': 'city not found'}, HTTPStatus.NOT_FOUND    
   
     try:
-        new_name = request.json
+        payload = request.json
+        new_city = schemas.City(**payload)
+    except ValidationError as e:             
+        return e.json(), HTTPStatus.BAD_REQUEST
     except werkzeug.exceptions.BadRequest:
         return {'message': 'incorrect input'}, HTTPStatus.BAD_REQUEST
-    city.name = new_name['name']
+
+    city.name = new_city.name
     db_session.commit()    
-    return new_name, HTTPStatus.OK
+    new_city = schemas.City.from_orm(city)    
+
+    return new_city.dict(), HTTPStatus.OK
 
 
 @cities.delete('/<uid>')
