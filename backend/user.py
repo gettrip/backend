@@ -7,6 +7,7 @@ from flask import jsonify, request, Blueprint
 from backend.db import db_session
 from uuid import uuid4
 from backend.models import User
+from backend.errors import Conflict
 
 user = Blueprint('user', __name__)
 
@@ -21,13 +22,10 @@ def add_user():
         new_user = User(uid = uid, name = user_data['name'])
         db_session.add(new_user)
         db_session.commit()
-    except werkzeug.exceptions.BadRequest:
-        return {"message": "user's data is incorrect"}, HTTPStatus.BAD_REQUEST
+    except KeyError:
+        return {"message": "user's data is incorrect"},  HTTPStatus.BAD_REQUEST
     except sqlalchemy.exc.IntegrityError:
-        return {"message": "user already exist"}, HTTPStatus.UNPROCESSABLE_ENTITY
-    except:
-        logger.exception("message")
-        return 
+        raise Conflict('user')
     return f'{new_user} successfully added', HTTPStatus.CREATED
 
 """ get all users """
