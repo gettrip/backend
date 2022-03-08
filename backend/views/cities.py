@@ -15,14 +15,16 @@ repo = CityRepo()
 
 @cities.get('/')
 def get_cities():
-    cities = repo.get_all()
+    entities = repo.get_all()      
+    cities = [schemas.City.from_orm(entity).dict() for entity in entities]    
     return jsonify(cities), HTTPStatus.OK
 
 
 @cities.get('/<uid>')
 def get_by_id(uid):
-    city = repo.get_by_id(uid)
-    return jsonify({'name': city.name, 'uid': city.uid}), HTTPStatus.OK
+    entity = repo.get_by_id(uid)
+    city = schemas.City.from_orm(entity)
+    return city.dict(), HTTPStatus.OK
 
 
 @cities.post('/')
@@ -30,7 +32,8 @@ def add_city():
     payload = request.json
     payload['uid'] = -1
     new_city = schemas.City(**payload)
-    entity = repo.add(new_city.name)    
+    entity = repo.add(new_city.name)   
+    logger.info(entity) 
     new_city = schemas.City.from_orm(entity)
     return new_city.dict(), HTTPStatus.CREATED
    
