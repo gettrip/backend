@@ -20,11 +20,7 @@ logger = logging.getLogger(__name__)
 def add_user():
 
     user_data = request.json
-
-    try:
-        user_data = schemas.User(**user_data)
-    except ValidationError:
-        raise NotValid('user')
+    user_data = schemas.User(**user_data)
 
     try:
         uid = uuid4().hex
@@ -75,13 +71,8 @@ def update_user(uid):
         raise NotFound('user')
 
     user_data = request.json
+    user_data = schemas.User(**user_data)
     
-    try:
-        user_data = schemas.User(**user_data)
-    except ValidationError:
-        raise NotValid('user')
-
-
     try: 
         user.name = user_data.name
         db_session.commit()    
