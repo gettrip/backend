@@ -10,5 +10,11 @@ class AppError(Exception):
 class Conflict(AppError):
     def __init__(self, entity: str):
         super().__init__(f'cannot add {entity}', HTTPStatus.CONFLICT)
-        self.entity = entity         
+        self.entity = entity
+
+class NotFound(AppError):
+    def __init__(self, entity: str):
+        super().__init__(f'cannot find {entity}', HTTPStatus.NOT_FOUND)
+        self.entity = entity
+  
         
