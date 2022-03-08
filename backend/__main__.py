@@ -2,7 +2,7 @@ from email import message
 import logging
 
 from flask import Flask
-from backend.cities import cities
+from backend.views.cities import cities
 from backend.user import user
 from http import HTTPStatus
 from werkzeug.exceptions import HTTPException
