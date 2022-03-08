@@ -2,7 +2,7 @@ from backend.models import City
 from backend.errors import Conflict
 from backend.db import db_session
 from sqlalchemy.exc import IntegrityError
-
+from typing import Optional
 
 class CityRepo:
 
@@ -11,7 +11,7 @@ class CityRepo:
         return City.query.all()
 
     
-    def get_by_id(self, uid: int) -> City:
+    def get_by_id(self, uid: int) -> Optional(City):
         return City.query.filter(City.uid==uid).first()
 
     
