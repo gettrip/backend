@@ -2,27 +2,20 @@ from backend.models import City
 from backend.errors import Conflict
 from backend.db import db_session
 from sqlalchemy.exc import IntegrityError
-from http import HTTPStatus
 
 
 class CityRepo:
 
     
-    def get_all(self):
-        cities = [{'name': city.name, 'uid': city.uid} for city in City.query.all()]
-        return cities
+    def get_all(self) -> list[City]:        
+        return City.query.all()
 
     
-    def get_by_id(self, uid: int):
-        city = City.query.filter(City.uid==uid).first()
-        if not city:
-            return {'message': 'city not found'}, HTTPStatus.NOT_FOUND
-            # TODO: add "raise" instead "return" ones errors.py updated.
-
-        return city
+    def get_by_id(self, uid: int) -> City:
+        return City.query.filter(City.uid==uid).first()
 
     
-    def add(self, name: str):
+    def add(self, name: str) -> City:
         try:            
             city = City(name=name)
             db_session.add(city)
@@ -33,12 +26,8 @@ class CityRepo:
         return city
 
 
-    def update(self, name: str, uid: int):
-        city = City.query.filter(City.uid==uid).first()
-        if not city:
-            return {'message': 'city not found'}, HTTPStatus.NOT_FOUND    
-            # TODO: add "raise" instead "return" ones errors.py updated.
-    
+    def update(self, name: str, uid: int) -> City:
+        city = City.query.filter(City.uid==uid).first()        
         try:
             city.name = name
             db_session.commit()                        
@@ -48,11 +37,7 @@ class CityRepo:
         return city
 
     
-    def delete(self, uid: int):
-        city = City.query.filter(City.uid==uid).first()
-        if not city:
-            return {'message': 'city not found'}, HTTPStatus.NOT_FOUND
-            # TODO: add "raise" instead "return" ones errors.py updated.
-
+    def delete(self, uid: int) -> None:
+        city = City.query.filter(City.uid==uid).first()        
         db_session.delete(city)
         db_session.commit()
