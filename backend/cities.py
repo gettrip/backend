@@ -1,73 +1,51 @@
 import logging
-import sqlalchemy.exc
 
 from http import HTTPStatus
 from flask import jsonify, request, Blueprint
-from backend.errors import Conflict
-from backend.db import db_session
-from backend.models import City
 from backend import schemas
+from backend.repos.cities import CityRepo
 
 
 logger = logging.getLogger(__name__)
 
 cities = Blueprint('cities', __name__)
 
+repo = CityRepo()
+
 
 @cities.get('/')
 def get_cities():
-    cities = [{'name': city.name, 'uid': city.uid} for city in City.query.all()]
+    cities = repo.get_all()
     return jsonify(cities), HTTPStatus.OK
 
 
 @cities.get('/<uid>')
 def get_by_id(uid):
-    city = City.query.filter(City.uid==uid).first()
-    if not city:
-        return {'message': 'city not found'}, HTTPStatus.NOT_FOUND
-
+    city = repo.get_by_id(uid)
     return jsonify({'name': city.name, 'uid': city.uid}), HTTPStatus.OK
 
 
 @cities.post('/')
-def add_city():
-    try:     
-        payload = request.json        
-        new_city = schemas.City(**payload)   
-        city = City(name=new_city.name)
-        db_session.add(city)
-        db_session.commit()           
-        new_city = schemas.City.from_orm(city)
-    except sqlalchemy.exc.IntegrityError:
-        raise Conflict('city')
-
+def add_city():      
+    payload = request.json
+    payload['uid'] = -1
+    new_city = schemas.City(**payload)
+    entity = repo.add(new_city.name)    
+    new_city = schemas.City.from_orm(entity)
     return new_city.dict(), HTTPStatus.CREATED
    
 
 @cities.put('/<uid>')
-def update_city(uid):
-    city = City.query.filter(City.uid==uid).first()
-    if not city:
-        return {'message': 'city not found'}, HTTPStatus.NOT_FOUND    
-  
-    try:
-        payload = request.json
-        new_city = schemas.City(**payload)
-        city.name = new_city.name
-        db_session.commit()    
-        new_city = schemas.City.from_orm(city)
-    except sqlalchemy.exc.IntegrityError:
-        raise Conflict('city')        
-
+def update_city(uid):    
+    payload = request.json
+    payload['uid'] = uid
+    new_city = schemas.City(**payload)    
+    entity = repo.update(**new_city.dict())    
+    new_city = schemas.City.from_orm(entity)
     return new_city.dict(), HTTPStatus.OK
 
 
 @cities.delete('/<uid>')
 def delete_city(uid):
-    city = City.query.filter(City.uid==uid).first()
-    if not city:
-        return {'message': 'city not found'}, HTTPStatus.NOT_FOUND
-
-    db_session.delete(city)
-    db_session.commit()
+    repo.delete(uid)    
     return {}, HTTPStatus.NO_CONTENT
