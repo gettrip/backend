@@ -9,7 +9,6 @@ class City(BaseModel):
         orm_mode=True
 
 class User(BaseModel):
-    name: str
     name: constr(min_length=1)
 
     class Config:

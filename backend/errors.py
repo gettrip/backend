@@ -15,5 +15,9 @@ class Conflict(AppError):
 class NotFound(AppError):
     def __init__(self, entity: str):
         super().__init__(f'cannot find {entity}', HTTPStatus.NOT_FOUND)
-        self.entity = entity         
+        self.entity = entity
+
+class NotValid(AppError):
+    def __init__(self, entity: str):
+        super().__init__(f'incorrect data for {entity}', HTTPStatus.BAD_REQUEST)    
         

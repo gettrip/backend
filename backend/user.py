@@ -6,9 +6,9 @@ from flask import jsonify, request, Blueprint
 from backend.db import db_session
 from uuid import uuid4
 from backend.models import User
-from backend.errors import Conflict, NotFound
-from pydantic import ValidationError
+from backend.errors import Conflict, NotFound, NotValid
 from backend import schemas
+from pydantic import ValidationError
 
 user = Blueprint('user', __name__)
 
@@ -18,19 +18,20 @@ logger = logging.getLogger(__name__)
 """ create user """
 @user.post('/')
 def add_user():
+
+    user_data = request.json
+
     try:
-        user_data = request.json
         user_data = schemas.User(**user_data)
-    except ValidationError as e:             
-        return e.json(), HTTPStatus.BAD_REQUEST
-    
+    except ValidationError:
+        raise NotValid('user')
+
     try:
         uid = uuid4().hex
         new_user = User(name=user_data.name, uid=uid)
         db_session.add(new_user)
         db_session.commit()
     except sqlalchemy.exc.IntegrityError:
-        logger.exception("message")
         raise Conflict('user')
 
     added_user = schemas.User.from_orm(new_user)
@@ -60,7 +61,7 @@ def get_by_id(uid):
 def delete_user(uid):
     user = User.query.filter(User.uid == uid).first()
     if not user:
-        raise NotFound('user')
+        return {}, HTTPStatus.NO_CONTENT
     db_session.delete(user)
     db_session.commit()
     return {"message": "user was successfully deleted"}, HTTPStatus.OK
@@ -73,11 +74,13 @@ def update_user(uid):
     if not user:
         raise NotFound('user')
 
+    user_data = request.json
+    
     try:
-        user_data = request.json
         user_data = schemas.User(**user_data)
-    except ValidationError as e:             
-        return e.json(), HTTPStatus.BAD_REQUEST
+    except ValidationError:
+        raise NotValid('user')
+
 
     try: 
         user.name = user_data.name
