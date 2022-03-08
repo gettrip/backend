@@ -34,8 +34,8 @@ def add_city():
     new_city = schemas.City(**payload)
 
     entity = repo.add(new_city.name)
-    new_city = schemas.City.from_orm(entity)
 
+    new_city = schemas.City.from_orm(entity)
     return new_city.dict(), HTTPStatus.CREATED
    
 
@@ -45,9 +45,9 @@ def update_city(uid):
     payload['uid'] = uid
     new_city = schemas.City(**payload)
 
-    entity = repo.update(**new_city.dict())    
+    entity = repo.update(**new_city.dict())   
+
     new_city = schemas.City.from_orm(entity)
-    
     return new_city.dict(), HTTPStatus.OK
 
 
