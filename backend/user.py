@@ -6,7 +6,7 @@ from flask import jsonify, request, Blueprint
 from backend.db import db_session
 from uuid import uuid4
 from backend.models import User
-from backend.errors import Conflict, NotFound, NotValid
+from backend.errors import Conflict, NotFound
 from backend import schemas
 from pydantic import ValidationError
 
