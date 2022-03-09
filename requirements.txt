@@ -1,4 +1,0 @@
-flask==2.0.3
-sqlalchemy==1.4.31
-pydantic==1.9.0
-pcycopg2_binary==2.9.3
