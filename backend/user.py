@@ -8,7 +8,6 @@ from uuid import uuid4
 from backend.models import User
 from backend.errors import Conflict, NotFound
 from backend import schemas
-from pydantic import ValidationError
 
 user = Blueprint('user', __name__)
 
@@ -24,7 +23,7 @@ def add_user():
 
     try:
         uid = uuid4().hex
-        new_user = User(name=user_data.name, uid=uid)
+        new_user = User(username=user_data.username)
         db_session.add(new_user)
         db_session.commit()
     except sqlalchemy.exc.IntegrityError:
@@ -38,7 +37,7 @@ def add_user():
 @user.get('/')
 def get_users():
     all_users = User.query.all()
-    all_users_lst = [{'name': user.name, 'uid': user.uid} for user in all_users ]
+    all_users_lst = [{'username': user.username, 'uid': user.uid} for user in all_users ]
     return jsonify(all_users_lst), HTTPStatus.OK
 
 """ get user by uid """
@@ -74,7 +73,7 @@ def update_user(uid):
     user_data = schemas.User(**user_data)
     
     try: 
-        user.name = user_data.name
+        user.username = user_data.username
         db_session.commit()    
     except sqlalchemy.exc.IntegrityError:
         raise Conflict('user')
