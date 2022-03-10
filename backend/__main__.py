@@ -3,7 +3,7 @@ import logging
 
 from flask import Flask
 from backend.views.cities import cities
-from backend.user import user
+from backend.views.user import user
 from http import HTTPStatus
 from werkzeug.exceptions import HTTPException
 from backend.errors import AppError
