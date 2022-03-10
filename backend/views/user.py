@@ -27,9 +27,9 @@ def add_user():
 """ get all users """
 @user.get('/')
 def get_users():
-    entitys = repo.get_all()
-    entitys_lst = [{'username': entity.username, 'uid': entity.uid} for entity in entitys]
-    return jsonify(entitys_lst), HTTPStatus.OK
+    entities = repo.get_all()
+    users = [schemas.City.from_orm(entity).dict() for entity in entities]
+    return jsonify(users), HTTPStatus.OK
 
 """ get user by uid """
 @user.get('/<uid>')
@@ -42,7 +42,7 @@ def get_by_id(uid):
 @user.delete('/<uid>')
 def delete_user(uid):
     repo.delete(uid)    
-    return {"message": "user was successfully deleted"}, HTTPStatus.NO_CONTENT
+    return {}, HTTPStatus.NO_CONTENT
 
 """ update user """
 @user.put('/<uid>')
