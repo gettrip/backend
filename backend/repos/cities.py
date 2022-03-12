@@ -11,7 +11,7 @@ class CityRepo:
         return City.query.all()
 
     
-    def get_by_id(self, uid: int) -> Optional[City]:
+    def get_by_id(self, uid: int) -> City:
         city = City.query.filter(City.uid==uid).first()
         if not city:
             raise NotFound('city')
