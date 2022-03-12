@@ -1,5 +1,5 @@
 from backend.models import City
-from backend.errors import Conflict
+from backend.errors import Conflict, NotFound
 from backend.db import db_session
 from sqlalchemy.exc import IntegrityError
 from typing import Optional
@@ -11,8 +11,12 @@ class CityRepo:
         return City.query.all()
 
     
-    def get_by_id(self, uid: int) -> Optional(City):
-        return City.query.filter(City.uid==uid).first()
+    def get_by_id(self, uid: int) -> City:
+        city = City.query.filter(City.uid==uid).first()
+        if not city:
+            raise NotFound('city')
+
+        return city
 
     
     def add(self, name: str) -> City:
@@ -27,7 +31,10 @@ class CityRepo:
 
 
     def update(self, name: str, uid: int) -> City:
-        city = City.query.filter(City.uid==uid).first()        
+        city = City.query.filter(City.uid==uid).first()
+        if not city:
+            raise NotFound('city')
+
         try:
             city.name = name
             db_session.commit()                        
