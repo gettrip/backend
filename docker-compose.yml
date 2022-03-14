@@ -8,6 +8,15 @@ services:
       - 5432:5432
     networks:
       - gettrip-backend
+  
+  webapp:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - 8080:8080
+    networks:
+      - gettrip-backend
 
 networks:
   gettrip-backend:
