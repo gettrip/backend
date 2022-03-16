@@ -6,3 +6,7 @@ db.run:
 
 stop:
 	docker-compose stop -t 1
+
+lint:
+	@mypy backend
+	@flake8 backend
