@@ -1,11 +1,12 @@
-from backend.models import User
-from backend.errors import Conflict, NotFound
+from sqlalchemy.exc import IntegrityError  # noqa: WPS226
+
 from backend.db import db_session
-from sqlalchemy.exc import IntegrityError
-from typing import Optional
+from backend.errors import Conflict, NotFound
+from backend.models import User
 
 
 class UserRepo:
+    name = 'user'
 
     def add(self, username: str) -> User:
         try:
@@ -13,36 +14,34 @@ class UserRepo:
             db_session.add(new_user)
             db_session.commit()
         except IntegrityError:
-            raise Conflict('user')
+            raise Conflict(self.name)
         return new_user
-
 
     def get_all(self) -> list[User]:
         return User.query.all()
 
-    def get_by_uid(self, uid: int) -> Optional[User]:
+    def get_by_uid(self, uid: int) -> User:
         user = User.query.filter(User.uid == uid).first()
         if not user:
-            raise NotFound('user')
+            raise NotFound(self.name)
         return user
 
     def delete(self, uid: int) -> None:
         user = User.query.filter(User.uid == uid).first()
         if not user:
-            raise NotFound('user')
+            raise NotFound(self.name)
         db_session.delete(user)
         db_session.commit()
-        return None
 
     def update(self, uid: int, new_name: str) -> User:
         user = User.query.filter(User.uid == uid).first()
         if not user:
-            raise NotFound('user')
+            raise NotFound(self.name)
 
-        try: 
+        try:
             user.username = new_name
-            db_session.commit()    
+            db_session.commit()
         except IntegrityError:
-            raise Conflict('user')
-            
+            raise Conflict(self.name)
+
         return user
