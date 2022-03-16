@@ -1,11 +1,11 @@
 import logging
-import os
 from http import HTTPStatus
 
 from flask import Flask
 from pydantic import ValidationError
 from werkzeug.exceptions import HTTPException
 
+import settings
 from backend.errors import AppError
 from backend.views.cities import cities
 from backend.views.user import user
@@ -39,8 +39,8 @@ def main():
     app.register_error_handler(ValidationError, handle_validation_error)
 
     app.run(
-        host=os.environ['APP_HOST'],
-        port=os.environ['APP_PORT'],
+        host=settings.APP_HOST,
+        port=settings.APP_PORT,
         debug=False,
     )
 
