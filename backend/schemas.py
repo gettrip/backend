@@ -1,15 +1,16 @@
-from pydantic import BaseModel, constr
+from pydantic import BaseModel, Field
 
-class City(BaseModel):    
+
+class City(BaseModel):
     uid: int
-    name: constr(min_length=1)    
-      
+    name: str = Field(min_length=1)
 
     class Config:
-        orm_mode=True
+        orm_mode = True
+
 
 class User(BaseModel):
-    username: constr(min_length=1)
+    username: str = Field(min_length=1)
 
     class Config:
-        orm_mode=True
+        orm_mode = True

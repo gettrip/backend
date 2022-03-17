@@ -1,4 +1,5 @@
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, Integer, String
+
 from backend.db import Base, engine
 
 
@@ -22,7 +23,7 @@ class User(Base):
         return f'User {self.uid}, {self.name}'
 
 
-def main():    
+def main():
     Base.metadata.create_all(bind=engine)
 
 
