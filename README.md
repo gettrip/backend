@@ -14,6 +14,7 @@ source .env\Scripts\activate
 
 ```bash
 poetry init
+poetry install
 ```
 
 ## Usage
