@@ -7,7 +7,7 @@ from werkzeug.exceptions import HTTPException
 
 from backend.config import load_from_env
 from backend.errors import AppError
-from backend.views.cities import cities
+from backend.views import cities
 from backend.views.user import user
 
 logger = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ def main():
 
     app = Flask(__name__)
 
-    app.register_blueprint(cities, url_prefix='/api/v1/cities')
+    app.register_blueprint(cities.view, url_prefix='/api/v1/cities')
     app.register_blueprint(user, url_prefix='/api/v1/users')
 
     app.register_error_handler(HTTPException, handle_http_exceptions)
