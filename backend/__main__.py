@@ -5,7 +5,7 @@ from flask import Flask
 from pydantic import ValidationError
 from werkzeug.exceptions import HTTPException
 
-import config
+from backend.config import load_from_env
 from backend.errors import AppError
 from backend.views.cities import cities
 from backend.views.user import user
@@ -38,7 +38,7 @@ def main():
     app.register_error_handler(AppError, handle_app_error)
     app.register_error_handler(ValidationError, handle_validation_error)
 
-    app_config = config.load_from_env()
+    app_config = load_from_env()
 
     app.run(
         port=app_config.server.port,

@@ -2,9 +2,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-import config
+from backend.config import load_from_env
 
-app_config = config.load_from_env()
+app_config = load_from_env()
 
 url = app_config.db.url
 
