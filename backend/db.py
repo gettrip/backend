@@ -1,12 +1,12 @@
-import os
-
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.orm import scoped_session, sessionmaker
 
-url = os.getenv('DB_URL')
+import settings
 
-engine = create_engine('{}'.format(url))
+url = settings.DB_URL
+
+engine = create_engine(url)
 db_session = scoped_session(sessionmaker(bind=engine))
 
 Base = declarative_base()
