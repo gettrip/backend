@@ -22,4 +22,3 @@ db.create:
 
 run:
 	@python -m backend
-
