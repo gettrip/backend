@@ -12,6 +12,3 @@ RUN poetry install --no-dev
 COPY backend /webapp/backend
 
 CMD ["python", "-m", "backend"]
-
-
-
