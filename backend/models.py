@@ -23,6 +23,17 @@ class User(Base):
         return f'User {self.uid}, {self.username}'
 
 
+class Place(Base):
+    __tablename__ = 'places'
+
+    uid = Column(Integer, primary_key=True)
+    city_uid = Column(Integer, nullable=False)
+    name = Column(String(), nullable=False)
+
+    def __repr__(self) -> str:
+        return f'Place {self.uid}, {self.name}'
+
+
 def main():
     Base.metadata.create_all(bind=engine)
 
