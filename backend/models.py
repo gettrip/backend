@@ -20,7 +20,7 @@ class User(Base):
     username = Column(String(), unique=True)
 
     def __repr__(self) -> str:
-        return f'User {self.uid}, {self.name}'
+        return f'User {self.uid}, {self.username}'
 
 
 def main():

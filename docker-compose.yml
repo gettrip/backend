@@ -8,7 +8,7 @@ services:
       - 5432:5432
     networks:
       - gettrip-backend
-  
+
   webapp:
     build: .
     env_file:
