@@ -20,3 +20,10 @@ class Place(Base):
     uid: int
     city_uid: int
     name: str = Field(min_length=1)
+
+
+class Travel(Base):
+    uid: int
+    city_uid: int
+    user_uid: int
+    name: str = Field(min_length=1)

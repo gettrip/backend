@@ -34,6 +34,18 @@ class Place(Base):
         return f'Place {self.uid}, {self.name}'
 
 
+class Travel(Base):
+    __tablename__ = 'travels'
+
+    uid = Column(Integer, primary_key=True)
+    name = Column(String(), nullable=False)
+    city_uid = Column(Integer, nullable=False)
+    user_uid = Column(Integer, nullable=False)
+
+    def __repr__(self) -> str:
+        return f'User {self.uid}, {self.name}'
+
+
 def main():
     Base.metadata.create_all(bind=engine)
 
