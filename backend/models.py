@@ -37,9 +37,8 @@ class Place(Base):
     name = Column(String(), unique=True, nullable=False)
 
     def __str__(self) -> str:
-        return 'Place {uid}, {city_id}, {name}'.format(
+        return 'Place {uid}, {name}'.format(
             uid=self.uid,
-            city_id=self.city_id,
             name=self.name,
         )
 
@@ -53,10 +52,8 @@ class Travel(Base):
     user_id = Column(Integer, ForeignKey(User.uid), nullable=False)
 
     def __str__(self) -> str:
-        return 'Place {uid}, {city_id}, {user_id}, {name}'.format(
+        return 'Place {uid}, {name}'.format(
             uid=self.uid,
-            city_id=self.city_id,
-            user_id=self.user_id,
             name=self.name,
         )
 
