@@ -18,17 +18,9 @@ class PlaceRepo:
 
         return place
 
-    def check_unique(self, city_uid, name):
-        city_uid_list = Place.query.filter(Place.city_uid == city_uid)
-        place_exist = city_uid_list.filter(Place.name == name).first()
-        if place_exist:
-            raise ConflictError(self.name)
-
-    def add(self, name: str, city_uid: int) -> Place:
-        self.check_unique(city_uid, name)
-
+    def add(self, name: str, city_id: int) -> Place:
         try:
-            place = Place(name=name, city_uid=city_uid)
+            place = Place(name=name, city_id=city_id)
             db_session.add(place)
             db_session.commit()
         except IntegrityError:
@@ -36,15 +28,14 @@ class PlaceRepo:
 
         return place
 
-    def update(self, name: str, city_uid: int, uid: int) -> Place:
+    def update(self, name: str, uid: int, city_id: int) -> Place:
         place = Place.query.filter(Place.uid == uid).first()
         if not place:
             raise NotFoundError(self.name)
 
-        self.check_unique(city_uid, name)
-
         try:
             place.name = name
+            place.city_id = city_id
             db_session.commit()
         except IntegrityError:
             raise ConflictError(self.name)
