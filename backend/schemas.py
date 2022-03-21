@@ -1,16 +1,29 @@
 from pydantic import BaseModel, Field
 
 
-class City(BaseModel):
+class Schema(BaseModel):
+
+    class Config:
+        orm_mode = True
+
+
+class City(Schema):
     uid: int
     name: str = Field(min_length=1)
 
-    class Config:
-        orm_mode = True
 
-
-class User(BaseModel):
+class User(Schema):
     username: str = Field(min_length=1)
 
-    class Config:
-        orm_mode = True
+
+class Place(Schema):
+    uid: int
+    city_id: int
+    name: str = Field(min_length=1)
+
+
+class Travel(Schema):
+    uid: int
+    city_id: int
+    user_id: int
+    name: str = Field(min_length=1)
