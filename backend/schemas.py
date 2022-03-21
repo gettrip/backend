@@ -22,8 +22,8 @@ class Place(Schema):
     name: str = Field(min_length=1)
 
 
-class Travel(Base):
+class Travel(Schema):
     uid: int
-    city_uid: int
-    user_uid: int
+    city_id: int
+    user_id: int
     name: str = Field(min_length=1)

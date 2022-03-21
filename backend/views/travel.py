@@ -35,8 +35,8 @@ def add_travel():
 
     entity = repo.add(
         new_travel.name,
-        new_travel.city_uid,
-        new_travel.user_uid,
+        new_travel.city_id,
+        new_travel.user_id,
     )
 
     new_travel = schemas.Travel.from_orm(entity)

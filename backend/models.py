@@ -48,12 +48,17 @@ class Travel(Base):
     __tablename__ = 'travels'
 
     uid = Column(Integer, primary_key=True)
-    name = Column(String(), nullable=False)
-    city_uid = Column(Integer, nullable=False)
-    user_uid = Column(Integer, nullable=False)
+    name = Column(String(), unique=True, nullable=False)
+    city_id = Column(Integer, ForeignKey(City.uid), nullable=False)
+    user_id = Column(Integer, ForeignKey(User.uid), nullable=False)
 
-    def __repr__(self) -> str:
-        return f'User {self.uid}, {self.name}'
+    def __str__(self) -> str:
+        return 'Place {uid}, {city_id}, {user_id}, {name}'.format(
+            uid=self.uid,
+            city_id=self.city_id,
+            user_id=self.user_id,
+            name=self.name,
+        )
 
 
 def main():

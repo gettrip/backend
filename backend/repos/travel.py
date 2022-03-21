@@ -18,18 +18,9 @@ class TravelRepo:
 
         return travel
 
-    def check_unique(self, user_uid, city_uid, name):
-        user_uid_list = Travel.query.filter(Travel.user_uid == user_uid)
-        city_uid_list = user_uid_list.filter(Travel.city_uid == city_uid)
-        travel_exist = city_uid_list.filter(Travel.name == name).first()
-        if travel_exist:
-            raise ConflictError(self.name)
-
-    def add(self, name: str, city_uid: int, user_uid: int) -> Travel:
-        self.check_unique(user_uid, city_uid, name)
-
+    def add(self, name: str, city_id: int, user_id: int) -> Travel:
         try:
-            travel = Travel(name=name, city_uid=city_uid, user_uid=user_uid)
+            travel = Travel(name=name, city_id=city_id, user_id=user_id)
             db_session.add(travel)
             db_session.commit()
         except IntegrityError:
@@ -37,17 +28,15 @@ class TravelRepo:
 
         return travel
 
-    def update(self, name: str, city_uid: int, uid: int, user_uid: int) -> Travel:
+    def update(self, name: str, city_id: int, uid: int, user_id: int) -> Travel:
         travel = Travel.query.filter(Travel.uid == uid).first()
         if not travel:
             raise NotFoundError(self.name)
 
-        self.check_unique(user_uid, city_uid, name)
-
         try:
             travel.name = name
-            travel.city_uid = city_uid
-            travel.user_uid = user_uid
+            travel.city_id = city_id
+            travel.user_id = user_id
             db_session.commit()
         except IntegrityError:
             raise ConflictError(self.name)
