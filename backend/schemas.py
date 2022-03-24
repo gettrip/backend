@@ -22,6 +22,19 @@ class Place(Schema):
     name: str = Field(min_length=1)
 
 
+class Route(Schema):
+    uid: int
+    city_id: int
+    name: str = Field(min_length=1)
+
+
+class RoutePlace(Schema):
+    position: int
+    place_id: int
+    route_id: int
+    distance: int
+
+
 class Travel(Schema):
     uid: int
     city_id: int

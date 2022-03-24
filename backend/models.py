@@ -1,4 +1,5 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, UniqueConstraint, PrimaryKeyConstraint
+from sqlalchemy.orm import relationship
 
 from backend.db import Base, engine
 
@@ -35,11 +36,47 @@ class Place(Base):
     uid = Column(Integer, primary_key=True)
     city_id = Column(Integer, ForeignKey(City.uid), nullable=False)
     name = Column(String(), unique=True, nullable=False)
+    routes = relationship('RoutePlace')
 
     def __str__(self) -> str:
         return 'Place {uid}, {name}'.format(
             uid=self.uid,
             name=self.name,
+        )
+
+
+class Route(Base):
+    __tablename__ = 'routes'
+
+    uid = Column(Integer, primary_key=True)
+    name = Column(String(), unique=True, nullable=False)
+    city_id = Column(Integer, ForeignKey(City.uid), nullable=False)
+    places = relationship('RoutePlace')
+
+    def __str__(self) -> str:
+        return 'Place {uid}, {name}'.format(
+            uid=self.uid,
+            name=self.name,
+        )
+
+
+class RoutePlace(Base):
+    __tablename__ = 'routes_places'
+
+    position = Column(Integer)
+    place_id = Column(Integer, ForeignKey(Place.uid), nullable=False)
+    route_id = Column(Integer, ForeignKey(Route.uid), nullable=False)
+    UniqueConstraint(place_id, route_id)
+    UniqueConstraint(position, route_id)
+    PrimaryKeyConstraint(place_id, route_id, position)
+    distance = Column(Integer)
+    place = relationship('Place', lazy='joined')
+    route = relationship('Route', lazy='joined')
+
+    def __str__(self) -> str:
+        return 'Route: {route}, place: {place}'.format(
+            route=self.route_id,
+            place=self.place_id,
         )
 
 
