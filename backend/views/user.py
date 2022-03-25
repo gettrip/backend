@@ -28,7 +28,7 @@ def add_user():
 @user.get('/')
 def get_users():
     entities = repo.get_all()
-    users = [schemas.City.from_orm(entity).dict() for entity in entities]
+    users = [schemas.User.from_orm(entity).dict() for entity in entities]
     return jsonify(users), HTTPStatus.OK
 
 
