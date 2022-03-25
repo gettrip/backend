@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from random import randint
 
 from flask import Blueprint, jsonify, request
 
@@ -66,7 +65,6 @@ def get_points(route_id):
 def add_point(route_id):
     payload = request.json
     payload['uid'] = -1
-    payload['distance'] = randint(100, 1000)
     new_routepoint = schemas.RoutePoint(**payload)
 
     entity = repo.add_point(
@@ -80,9 +78,7 @@ def add_point(route_id):
     return new_routepoint.dict(), HTTPStatus.CREATED
 
 
-@view.delete('/<route_id>/places/')
-def delete_point(route_id):
-    payload = request.json
-    payload['route_id'] = route_id
-    repo.delete_point(**payload)
+@view.delete('/<route_id>/places/<place_id>')
+def delete_point(route_id, place_id):
+    repo.delete_point(route_id, place_id)
     return {}, HTTPStatus.NO_CONTENT
