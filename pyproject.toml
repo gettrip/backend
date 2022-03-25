@@ -6,10 +6,10 @@ authors = ["Valexandrin <alex-vadim@mail.ru>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-Flask = "^2.0.3"
 pydantic = "^1.9.0"
 SQLAlchemy = "^1.4.32"
 psycopg2-binary = "^2.9.3"
+Flask = "^2.0.3"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.931"
