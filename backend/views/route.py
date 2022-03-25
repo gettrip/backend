@@ -1,4 +1,3 @@
-import logging
 from http import HTTPStatus
 from random import randint
 
@@ -7,15 +6,13 @@ from flask import Blueprint, jsonify, request
 from backend import schemas
 from backend.repos.route import RouteRepo
 
-logger = logging.getLogger(__name__)
-
 view = Blueprint('route', __name__)
 
 repo = RouteRepo()
 
 
 @view.get('/')
-def get_route():
+def get_all():
     entities = repo.get_all()
     routes = [schemas.Route.from_orm(entity).dict() for entity in entities]
     return jsonify(routes), HTTPStatus.OK
@@ -58,34 +55,34 @@ def delete_route(uid):
     return {}, HTTPStatus.NO_CONTENT
 
 
-@view.get('/1/places/')
-def get_routeplaces():
-    entities = repo.get_all_routplaces()
-    routeplaces = [schemas.RoutePlace.from_orm(entity).dict() for entity in entities]
-    return jsonify(routeplaces), HTTPStatus.OK
+@view.get('/<route_id>/places/')
+def get_points(route_id):
+    entities = repo.get_points(route_id)
+    points = [schemas.Place.from_orm(entity).dict() for entity in entities]
+    return jsonify(points), HTTPStatus.OK
 
 
-@view.post('/1/places/')
-def add_routeplace():
+@view.post('/<route_id>/places/')
+def add_point(route_id):
     payload = request.json
     payload['uid'] = -1
     payload['distance'] = randint(100, 1000)
-    new_routeplace = schemas.RoutePlace(**payload)
+    new_routepoint = schemas.RoutePoint(**payload)
 
-    entity = repo.add_routeplace(
-        new_routeplace.route_id,
-        new_routeplace.position,
-        new_routeplace.place_id,
-        new_routeplace.distance,
+    entity = repo.add_point(
+        route_id,
+        new_routepoint.position,
+        new_routepoint.place_id,
+        new_routepoint.distance,
     )
 
-    new_routeplace = schemas.RoutePlace.from_orm(entity)
-    return new_routeplace.dict(), HTTPStatus.CREATED
+    new_routepoint = schemas.RoutePoint.from_orm(entity)
+    return new_routepoint.dict(), HTTPStatus.CREATED
 
 
-@view.delete('/1/places/')
-def delete_routeplace():
+@view.delete('/<route_id>/places/')
+def delete_point(route_id):
     payload = request.json
-    logger.info(payload)
-    repo.delete_routeplace(**payload)
+    payload['route_id'] = route_id
+    repo.delete_point(**payload)
     return {}, HTTPStatus.NO_CONTENT

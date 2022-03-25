@@ -1,4 +1,3 @@
-import logging
 from http import HTTPStatus
 
 from flask import Blueprint, jsonify, request
@@ -6,15 +5,13 @@ from flask import Blueprint, jsonify, request
 from backend import schemas
 from backend.repos.cities import CityRepo
 
-logger = logging.getLogger(__name__)
-
 view = Blueprint('cities', __name__)
 
 repo = CityRepo()
 
 
 @view.get('/')
-def get_cities():
+def get_all():
     entities = repo.get_all()
     cities = [schemas.City.from_orm(entity).dict() for entity in entities]
     return jsonify(cities), HTTPStatus.OK

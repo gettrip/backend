@@ -28,10 +28,9 @@ class Route(Schema):
     name: str = Field(min_length=1)
 
 
-class RoutePlace(Schema):
+class RoutePoint(Schema):
     position: int
     place_id: int
-    route_id: int
     distance: int
 
 
