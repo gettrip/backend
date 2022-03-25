@@ -1,4 +1,3 @@
-import logging
 from http import HTTPStatus
 
 from flask import Blueprint, jsonify, request
@@ -6,15 +5,13 @@ from flask import Blueprint, jsonify, request
 from backend import schemas
 from backend.repos.travel import TravelRepo
 
-logger = logging.getLogger(__name__)
-
 view = Blueprint('travel', __name__)
 
 repo = TravelRepo()
 
 
 @view.get('/')
-def get_travels():
+def get_all():
     entities = repo.get_all()
     travels = [schemas.Travel.from_orm(entity).dict() for entity in entities]
     return jsonify(travels), HTTPStatus.OK
