@@ -66,12 +66,15 @@ class RoutePoint(Base):
     position = Column(Integer)
     place_id = Column(Integer, ForeignKey(Place.uid), nullable=False)
     route_id = Column(Integer, ForeignKey(Route.uid), nullable=False)
-    UniqueConstraint(place_id, route_id)
-    UniqueConstraint(position, route_id)
-    PrimaryKeyConstraint(place_id, route_id, position)
     distance = Column(Integer)
     place = relationship('Place', lazy='joined')
     route = relationship('Route', lazy='joined')
+
+    __table_args__ = (
+        UniqueConstraint(place_id, route_id),
+        UniqueConstraint(position, route_id),
+        PrimaryKeyConstraint(place_id, route_id, position),
+    )
 
     def __str__(self) -> str:
         return 'Route: {route}, place: {place}'.format(
