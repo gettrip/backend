@@ -1,5 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer, PrimaryKeyConstraint, String, UniqueConstraint
-from sqlalchemy.orm import relationship, RelationshipProperty
+from sqlalchemy.orm import RelationshipProperty, relationship
 
 from backend.db import Base, engine
 
