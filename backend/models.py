@@ -1,5 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer, PrimaryKeyConstraint, String, UniqueConstraint
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, RelationshipProperty
 
 from backend.db import Base, engine
 
@@ -36,7 +36,7 @@ class Place(Base):
     uid = Column(Integer, primary_key=True)
     city_id = Column(Integer, ForeignKey(City.uid), nullable=False)
     name = Column(String(), unique=True, nullable=False)
-    routes = relationship('RoutePoint')
+    routes: RelationshipProperty = relationship('RoutePoint')
 
     def __str__(self) -> str:
         return 'Place {uid}, {name}'.format(
@@ -51,7 +51,7 @@ class Route(Base):
     uid = Column(Integer, primary_key=True)
     name = Column(String(), unique=True, nullable=False)
     city_id = Column(Integer, ForeignKey(City.uid), nullable=False)
-    places = relationship('RoutePoint')
+    places: RelationshipProperty = relationship('RoutePoint')
 
     def __str__(self) -> str:
         return 'Place {uid}, {name}'.format(
@@ -67,8 +67,8 @@ class RoutePoint(Base):
     place_id = Column(Integer, ForeignKey(Place.uid), nullable=False)
     route_id = Column(Integer, ForeignKey(Route.uid), nullable=False)
     distance = Column(Integer)
-    place = relationship('Place', lazy='joined')
-    route = relationship('Route', lazy='joined')
+    place: RelationshipProperty = relationship('Place', lazy='joined')
+    route: RelationshipProperty = relationship('Route', lazy='joined')
 
     __table_args__ = (
         UniqueConstraint(place_id, route_id),
