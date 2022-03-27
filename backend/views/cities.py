@@ -26,7 +26,7 @@ def get_by_id(uid):
     return city.dict(), HTTPStatus.OK
 
 
-@view.get('/<uid>/routes')
+@view.get('/<uid>/routes/')
 def get_routes(uid):
     entities = route_repo.get_by_city(uid)
     routes = [schemas.Route.from_orm(entity).dict() for entity in entities]
