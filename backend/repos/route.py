@@ -18,6 +18,13 @@ class RouteRepo:
 
         return route
 
+    def get_by_city(self, city_id: int) -> list[Route]:
+        routes = Route.query.filter(Route.city_id == city_id)
+        if not routes:
+            raise NotFoundError(self.name)
+
+        return routes
+
     def add(self, name: str, city_id: int) -> Route:
         try:
             route = Route(name=name, city_id=city_id)
