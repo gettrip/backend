@@ -4,6 +4,7 @@ from flask import Flask
 from pydantic import ValidationError
 from werkzeug.exceptions import HTTPException
 
+from backend.db import db_session
 from backend.errors import AppError
 from backend.views import cities, place, route, travel, user
 
@@ -20,6 +21,10 @@ def handle_validation_error(error: ValidationError):
     return error.json(), HTTPStatus.BAD_REQUEST
 
 
+def shutdown_session(exception=None):
+    db_session.remove()
+
+
 def create_app():
     app = Flask(__name__)
 
@@ -32,5 +37,7 @@ def create_app():
     app.register_error_handler(HTTPException, handle_http_exceptions)
     app.register_error_handler(AppError, handle_app_error)
     app.register_error_handler(ValidationError, handle_validation_error)
+
+    app.teardown_appcontext(shutdown_session)
 
     return app
