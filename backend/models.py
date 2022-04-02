@@ -61,7 +61,7 @@ class Route(Base):
 
 
 class RoutePoint(Base):
-    __tablename__ = 'routes_places'
+    __tablename__ = 'routes_points'
 
     position = Column(Integer)
     place_id = Column(Integer, ForeignKey(Place.uid), nullable=False)
