@@ -9,6 +9,7 @@ class City(Base):
 
     uid = Column(Integer, primary_key=True)
     name = Column(String(), unique=True, nullable=False)
+    image = Column(String())
 
     def __str__(self) -> str:
         return 'City {uid}, {name}'.format(
@@ -36,6 +37,8 @@ class Place(Base):
     uid = Column(Integer, primary_key=True)
     city_id = Column(Integer, ForeignKey(City.uid), nullable=False)
     name = Column(String(), unique=True, nullable=False)
+    image = Column(String())
+    description = Column(String())
     routes: RelationshipProperty = relationship('RoutePoint')
 
     def __str__(self) -> str:
@@ -51,6 +54,8 @@ class Route(Base):
     uid = Column(Integer, primary_key=True)
     name = Column(String(), unique=True, nullable=False)
     city_id = Column(Integer, ForeignKey(City.uid), nullable=False)
+    image = Column(String())
+    description = Column(String())
     places: RelationshipProperty = relationship('RoutePoint')
 
     def __str__(self) -> str:

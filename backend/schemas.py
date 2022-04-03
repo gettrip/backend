@@ -10,6 +10,7 @@ class Schema(BaseModel):
 class City(Schema):
     uid: int
     name: str = Field(min_length=1)
+    image: str
 
 
 class User(Schema):
@@ -20,12 +21,16 @@ class Place(Schema):
     uid: int
     city_id: int
     name: str = Field(min_length=1)
+    image: str
+    description: str
 
 
 class Route(Schema):
     uid: int
     city_id: int
     name: str = Field(min_length=1)
+    image: str
+    description: str
 
 
 class RoutePoint(Schema):
