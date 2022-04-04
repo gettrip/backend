@@ -23,5 +23,8 @@ db.create:
 run:
 	@python -m backend
 
-alembic:
-	@alembic ${command}
+db.makemigrations:
+	@alembic revision --autogenerate -m "${message}"
+
+db.migrate:
+	@alembic upgrade head
