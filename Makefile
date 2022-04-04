@@ -22,3 +22,6 @@ db.create:
 
 run:
 	@python -m backend
+
+alembic:
+	@alembic ${command}
