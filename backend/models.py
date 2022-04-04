@@ -52,11 +52,15 @@ class Route(Base):
     __tablename__ = 'routes'
 
     uid = Column(Integer, primary_key=True)
-    name = Column(String(), unique=True, nullable=False)
+    name = Column(String(), nullable=False)
     city_id = Column(Integer, ForeignKey(City.uid), nullable=False)
     image = Column(String())
     description = Column(String())
     places: RelationshipProperty = relationship('RoutePoint')
+
+    __table_args__ = (
+        UniqueConstraint(name, city_id),
+    )
 
     def __str__(self) -> str:
         return 'Place {uid}, {name}'.format(
