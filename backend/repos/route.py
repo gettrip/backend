@@ -79,7 +79,7 @@ class RouteRepo:
         ).join(
             RoutePoint.place,
             RoutePoint.route,
-        ).filter(Route.uid == route_id)
+        ).filter(Route.uid == route_id).order_by(RoutePoint.position.asc())
 
     def delete_point(self, route_id: int, place_id: int) -> None:
         point = RoutePoint.query.filter(
