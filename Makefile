@@ -28,3 +28,6 @@ db.makemigrations:
 
 db.migrate:
 	@alembic upgrade head
+
+alembic:
+	@alembic ${command}
