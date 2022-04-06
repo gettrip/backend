@@ -23,6 +23,7 @@ class Place(Schema):
     name: str = Field(min_length=1)
     image: str
     description: str
+    duration: int
 
 
 class Route(Schema):
@@ -31,6 +32,7 @@ class Route(Schema):
     name: str = Field(min_length=1)
     image: str
     description: str
+    duration: int
 
 
 class RoutePoint(Schema):
