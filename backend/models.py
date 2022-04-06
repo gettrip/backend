@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, PrimaryKeyConstraint, String, UniqueConstraint
+from sqlalchemy import Column, ForeignKey, Integer, PrimaryKeyConstraint, String, UniqueConstraint, Interval
 from sqlalchemy.orm import RelationshipProperty, relationship
 
 from backend.db import Base, engine
@@ -39,6 +39,7 @@ class Place(Base):
     name = Column(String(), unique=True, nullable=False)
     image = Column(String())
     description = Column(String())
+    duration = Column(String())
     routes: RelationshipProperty = relationship('RoutePoint')
 
     def __str__(self) -> str:
@@ -56,6 +57,7 @@ class Route(Base):
     city_id = Column(Integer, ForeignKey(City.uid), nullable=False)
     image = Column(String())
     description = Column(String())
+    duration = Column(String(), nullable=False)
     places: RelationshipProperty = relationship('RoutePoint')
 
     __table_args__ = (
@@ -75,7 +77,7 @@ class RoutePoint(Base):
     position = Column(Integer)
     place_id = Column(Integer, ForeignKey(Place.uid), nullable=False)
     route_id = Column(Integer, ForeignKey(Route.uid), nullable=False)
-    distance = Column(Integer)
+    distance = Column(Integer, nullable=False)
     place: RelationshipProperty = relationship('Place', lazy='joined')
     route: RelationshipProperty = relationship('Route', lazy='joined')
 
