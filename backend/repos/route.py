@@ -82,10 +82,15 @@ class RouteRepo:
         ).filter(Route.uid == route_id).order_by(RoutePoint.position.asc())
 
     def get_points(self, route_id: int) -> list[RoutePoint]:
-        routes = RoutePoint.query.filter(RoutePoint.route_id == route_id)
-        if not routes:
+        points = RoutePoint.query.filter(
+            RoutePoint.route_id == route_id,
+        ).order_by(
+            RoutePoint.position.asc(),
+        )
+
+        if not points:
             return []
-        return routes
+        return points
 
     def delete_point(self, route_id: int, place_id: int) -> None:
         point = RoutePoint.query.filter(
