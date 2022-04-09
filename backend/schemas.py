@@ -37,7 +37,6 @@ class Route(Schema):
 
 class RoutePoint(Schema):
     position: int
-    place_id: int
     distance: int
     place: Place
 
