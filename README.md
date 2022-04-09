@@ -20,7 +20,7 @@ poetry install
 ## Usage
 
 ```bash
-python -m backend
+make run
 ```
 
 ## Resources used
