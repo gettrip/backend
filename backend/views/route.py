@@ -54,10 +54,10 @@ def delete_route(uid):
     return {}, HTTPStatus.NO_CONTENT
 
 
-@view.get('/<route_id>/places/')
+@view.get('/<route_id>/points/')
 def get_points(route_id):
     entities = repo.get_points(route_id)
-    points = [schemas.Place.from_orm(entity).dict() for entity in entities]
+    points = [schemas.RoutePoint.from_orm(entity).dict() for entity in entities]
     return jsonify(points), HTTPStatus.OK
 
 

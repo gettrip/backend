@@ -79,7 +79,7 @@ class RoutePoint(Base):
     route_id = Column(Integer, ForeignKey(Route.uid), nullable=False)
     distance = Column(Integer, nullable=False)
     place: RelationshipProperty = relationship('Place', lazy='joined')
-    route: RelationshipProperty = relationship('Route', lazy='joined')
+    route: RelationshipProperty = relationship('Route')
 
     __table_args__ = (
         UniqueConstraint(place_id, route_id),

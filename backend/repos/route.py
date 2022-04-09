@@ -2,7 +2,7 @@ from sqlalchemy.exc import IntegrityError
 
 from backend.db import db_session
 from backend.errors import ConflictError, NotFoundError
-from backend.models import Place, Route, RoutePoint
+from backend.models import Route, RoutePoint
 
 
 class RouteRepo:
@@ -73,13 +73,12 @@ class RouteRepo:
 
         return routepoint
 
-    def get_points(self, route_id: int) -> list[Place]:
-        return db_session.query(
-            Place,
-        ).join(
-            RoutePoint.place,
-            RoutePoint.route,
-        ).filter(Route.uid == route_id).order_by(RoutePoint.position.asc())
+    def get_points(self, route_id: int) -> list[RoutePoint]:
+        return RoutePoint.query.filter(
+            RoutePoint.route_id == route_id,
+        ).order_by(
+            RoutePoint.position.asc(),
+        )
 
     def delete_point(self, route_id: int, place_id: int) -> None:
         point = RoutePoint.query.filter(
