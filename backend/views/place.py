@@ -30,7 +30,13 @@ def add_place():
     payload['uid'] = -1
     new_place = schemas.Place(**payload)
 
-    entity = repo.add(new_place.name, new_place.city_id)
+    entity = repo.add(
+        new_place.name,
+        new_place.city_id,
+        new_place.image,
+        new_place.description,
+        new_place.duration,
+    )
 
     new_place = schemas.Place.from_orm(entity)
     return new_place.dict(), HTTPStatus.CREATED
