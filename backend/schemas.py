@@ -38,7 +38,15 @@ class Route(Schema):
 class RoutePoint(Schema):
     position: int
     distance: int
+    place_id: int
+    route_id: int
+
+
+class RoutePointGet(Schema):
+    position: int
+    distance: int
     place: Place
+    route_id: int
 
 
 class Travel(Schema):
