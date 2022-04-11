@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
 
@@ -39,14 +41,7 @@ class RoutePoint(Schema):
     position: int
     distance: int
     place_id: int
-    route_id: int
-
-
-class RoutePointGet(Schema):
-    position: int
-    distance: int
-    place: Place
-    route_id: int
+    place: Optional[Place]
 
 
 class Travel(Schema):
