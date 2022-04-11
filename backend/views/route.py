@@ -67,7 +67,7 @@ def get_points(route_id):
     return jsonify(points), HTTPStatus.OK
 
 
-@view.post('/<route_id>/places/')
+@view.post('/<route_id>/points/')
 def add_point(route_id):
     payload = request.json
     payload['uid'] = -1
@@ -84,7 +84,7 @@ def add_point(route_id):
     return new_routepoint.dict(), HTTPStatus.CREATED
 
 
-@view.delete('/<route_id>/places/<place_id>')
+@view.delete('/<route_id>/points/<place_id>')
 def delete_point(route_id, place_id):
     repo.delete_point(route_id, place_id)
     return {}, HTTPStatus.NO_CONTENT
