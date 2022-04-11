@@ -18,9 +18,9 @@ class CityRepo:
 
         return city
 
-    def add(self, name: str) -> City:
+    def add(self, name: str, image: str) -> City:
         try:
-            city = City(name=name)
+            city = City(name=name, image=image)
             db_session.add(city)
             db_session.commit()
         except IntegrityError:
@@ -28,13 +28,14 @@ class CityRepo:
 
         return city
 
-    def update(self, name: str, uid: int) -> City:
+    def update(self, name: str, uid: int, image: str) -> City:
         city = City.query.filter(City.uid == uid).first()
         if not city:
             raise NotFoundError(self.name)
 
         try:
             city.name = name
+            city.image = image
             db_session.commit()
         except IntegrityError:
             raise ConflictError(self.name)

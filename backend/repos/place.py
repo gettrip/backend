@@ -18,9 +18,15 @@ class PlaceRepo:
 
         return place
 
-    def add(self, name: str, city_id: int) -> Place:
+    def add(self, name: str, city_id: int, image: str, description: str, duration: int) -> Place:
         try:
-            place = Place(name=name, city_id=city_id)
+            place = Place(
+                name=name,
+                city_id=city_id,
+                image=image,
+                description=description,
+                duration=duration,
+            )
             db_session.add(place)
             db_session.commit()
         except IntegrityError:
@@ -28,7 +34,10 @@ class PlaceRepo:
 
         return place
 
-    def update(self, name: str, uid: int, city_id: int) -> Place:
+    def update(
+        self, name: str, uid: int, city_id: int, image: str, description: str, duration: int,
+    ) -> Place:
+
         place = Place.query.filter(Place.uid == uid).first()
         if not place:
             raise NotFoundError(self.name)
@@ -36,6 +45,9 @@ class PlaceRepo:
         try:
             place.name = name
             place.city_id = city_id
+            place.image = image
+            place.description = description
+            place.duration = duration
             db_session.commit()
         except IntegrityError:
             raise ConflictError(self.name)

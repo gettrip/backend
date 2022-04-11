@@ -30,7 +30,13 @@ def add_route():
     payload['uid'] = -1
     new_route = schemas.Route(**payload)
 
-    entity = repo.add(new_route.name, new_route.city_id)
+    entity = repo.add(
+        new_route.name,
+        new_route.city_id,
+        new_route.image,
+        new_route.description,
+        new_route.duration,
+    )
 
     new_route = schemas.Route.from_orm(entity)
     return new_route.dict(), HTTPStatus.CREATED

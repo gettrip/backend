@@ -24,9 +24,15 @@ class RouteRepo:
             return []
         return routes
 
-    def add(self, name: str, city_id: int) -> Route:
+    def add(self, name: str, city_id: int, image: str, description: str, duration: int) -> Route:
         try:
-            route = Route(name=name, city_id=city_id)
+            route = Route(
+                name=name,
+                city_id=city_id,
+                image=image,
+                description=description,
+                duration=duration,
+            )
             db_session.add(route)
             db_session.commit()
         except IntegrityError:
@@ -34,7 +40,9 @@ class RouteRepo:
 
         return route
 
-    def update(self, name: str, uid: int, city_id: int) -> Route:
+    def update(
+        self, name: str, uid: int, city_id: int, image: str, description: str, duration: int,
+    ) -> Route:
         route = Route.query.filter(Route.uid == uid).first()
         if not route:
             raise NotFoundError(self.name)
@@ -42,6 +50,9 @@ class RouteRepo:
         try:
             route.name = name
             route.city_id = city_id
+            route.image = image
+            route.description = description
+            route.duration = duration
             db_session.commit()
         except IntegrityError:
             raise ConflictError(self.name)

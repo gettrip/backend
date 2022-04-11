@@ -39,7 +39,7 @@ def add_city():
     payload['uid'] = -1
     new_city = schemas.City(**payload)
 
-    entity = city_repo.add(new_city.name)
+    entity = city_repo.add(new_city.name, new_city.image)
 
     new_city = schemas.City.from_orm(entity)
     return new_city.dict(), HTTPStatus.CREATED
