@@ -60,7 +60,7 @@ class RouteRepo:
         return route
 
     def delete(self, uid: int) -> None:
-        points = db_session.query(RoutePoint).filter(Route.uid == uid)
+        points = db_session.query(RoutePoint).filter(RoutePoint.route_id == uid)
         for point in points:
             db_session.delete(point)
         route = Route.query.filter(Route.uid == uid).first()
