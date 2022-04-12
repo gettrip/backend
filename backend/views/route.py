@@ -54,8 +54,8 @@ def update_route(uid):
     return new_route.dict(), HTTPStatus.OK
 
 
-@view.delete('/<uid>')
-def delete_route(uid):
+@view.delete('/<int:uid>')
+def delete_route(uid: int):
     repo.delete(uid)
     return {}, HTTPStatus.NO_CONTENT
 
