@@ -3,6 +3,7 @@ from http import HTTPStatus
 from flask import Blueprint, jsonify, request
 
 from backend import schemas
+from backend.auth import auth
 from backend.repos.travel import TravelRepo
 
 view = Blueprint('travel', __name__)
@@ -53,6 +54,7 @@ def update_travel(uid):
 
 
 @view.delete('/<uid>')
+@auth.login_required
 def delete_travel(uid):
     repo.delete(uid)
     return {}, HTTPStatus.NO_CONTENT

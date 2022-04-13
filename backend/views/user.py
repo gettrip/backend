@@ -4,6 +4,7 @@ from http import HTTPStatus
 from flask import Blueprint, jsonify, request
 
 from backend import schemas
+from backend.auth import auth
 from backend.repos.user import UserRepo
 
 logger = logging.getLogger(__name__)
@@ -40,6 +41,7 @@ def get_by_id(uid):
 
 
 @user.delete('/<uid>')
+@auth.login_required
 def delete_user(uid):
     repo.delete(uid)
     return {}, HTTPStatus.NO_CONTENT

@@ -1,29 +1,14 @@
 from http import HTTPStatus
 
 from flask import Blueprint, jsonify, request
-from flask_httpauth import HTTPTokenAuth
 
 from backend import schemas
-from backend.config import load_from_env
+from backend.auth import auth
 from backend.repos.route import RouteRepo
 
 view = Blueprint('route', __name__)
 
 repo = RouteRepo()
-
-auth = HTTPTokenAuth(scheme='Bearer')
-
-db_config = load_from_env()
-
-db_token = db_config.db.token
-
-tokens = {db_token: 'verified'}
-
-
-@auth.verify_token
-def verify_token(token):
-    if token in tokens:
-        return tokens.get(token)
 
 
 @view.get('/')
