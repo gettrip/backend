@@ -4,12 +4,11 @@ from backend.config import config
 
 auth = HTTPTokenAuth(scheme='Bearer')
 
-db_token = config.db.token
+app_token = config.server.token
 
-tokens = {db_token: 'verified'}
+tokens = {app_token: 'verified'}
 
 
 @auth.verify_token
 def verify_token(token):
-    if token in tokens:
-        return tokens.get(token)
+    return tokens.get(token)
