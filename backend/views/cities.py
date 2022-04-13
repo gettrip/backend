@@ -3,6 +3,7 @@ from http import HTTPStatus
 from flask import Blueprint, jsonify, request
 
 from backend import schemas
+from backend.auth import auth
 from backend.repos.cities import CityRepo
 from backend.repos.route import RouteRepo
 
@@ -58,6 +59,7 @@ def update_city(uid):
 
 
 @view.delete('/<uid>')
+@auth.login_required
 def delete_city(uid):
     city_repo.delete(uid)
     return {}, HTTPStatus.NO_CONTENT

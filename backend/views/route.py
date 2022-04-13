@@ -3,6 +3,7 @@ from http import HTTPStatus
 from flask import Blueprint, jsonify, request
 
 from backend import schemas
+from backend.auth import auth
 from backend.repos.route import RouteRepo
 
 view = Blueprint('route', __name__)
@@ -55,6 +56,7 @@ def update_route(uid):
 
 
 @view.delete('/<int:uid>')
+@auth.login_required
 def delete_route(uid: int):
     repo.delete(uid)
     return {}, HTTPStatus.NO_CONTENT
@@ -85,6 +87,7 @@ def add_point(route_id):
 
 
 @view.delete('/<route_id>/points/<place_id>')
+@auth.login_required
 def delete_point(route_id, place_id):
     repo.delete_point(route_id, place_id)
     return {}, HTTPStatus.NO_CONTENT
