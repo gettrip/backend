@@ -1,11 +1,10 @@
 from flask_httpauth import HTTPTokenAuth
 
-from backend.config import load_from_env
+from backend.config import config
 
 auth = HTTPTokenAuth(scheme='Bearer')
 
-db_config = load_from_env()
-db_token = db_config.db.token
+db_token = config.db.token
 
 tokens = {db_token: 'verified'}
 

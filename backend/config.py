@@ -27,3 +27,6 @@ def load_from_env() -> AppConfig:
         server=Server(port=app_port, host=app_host),
         db=DataBase(url=db_url, token=db_token),
     )
+
+
+config = load_from_env()
