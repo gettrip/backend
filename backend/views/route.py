@@ -1,13 +1,29 @@
 from http import HTTPStatus
 
 from flask import Blueprint, jsonify, request
+from flask_httpauth import HTTPTokenAuth
 
 from backend import schemas
+from backend.config import load_from_env
 from backend.repos.route import RouteRepo
 
 view = Blueprint('route', __name__)
 
 repo = RouteRepo()
+
+auth = HTTPTokenAuth(scheme='Bearer')
+
+db_config = load_from_env()
+
+db_token = db_config.db.token
+
+tokens = {db_token: 'verified'}
+
+
+@auth.verify_token
+def verify_token(token):
+    if token in tokens:
+        return tokens.get(token)
 
 
 @view.get('/')
@@ -55,6 +71,7 @@ def update_route(uid):
 
 
 @view.delete('/<int:uid>')
+@auth.login_required
 def delete_route(uid: int):
     repo.delete(uid)
     return {}, HTTPStatus.NO_CONTENT
@@ -85,6 +102,7 @@ def add_point(route_id):
 
 
 @view.delete('/<route_id>/points/<place_id>')
+@auth.login_required
 def delete_point(route_id, place_id):
     repo.delete_point(route_id, place_id)
     return {}, HTTPStatus.NO_CONTENT
