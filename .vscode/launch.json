@@ -7,15 +7,25 @@
             "request": "launch",
             "module": "backend",
             "envFile": "${workspaceFolder}/.env",
-            "console": "internalConsole",
+            "console": "internalConsole"
         },
         {
             "name": "create_db",
             "type": "python",
+            "envFile": "${workspaceFolder}/.env",
             "request": "launch",
             "module": "backend.models",
-            "console": "internalConsole",
-            "envFile": "${workspaceFolder}/.env"
+            "args": ["postgresql://gettrip:<password>@localhost:5432/gettrip"],
+            "console": "internalConsole"
+        },
+        {
+          "name": "create_test_db",
+          "type": "python",
+          "envFile": "${workspaceFolder}/.env",
+          "request": "launch",
+          "module": "backend.models",
+          "args": ["postgresql://gettrip:<password>@localhost:5433/gettrip"],
+          "console": "internalConsole"
         }
     ]
 }
