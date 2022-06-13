@@ -31,3 +31,6 @@ db.migrate:
 
 alembic:
 	@alembic ${command}
+
+test:
+	@python -m pytest tests/
