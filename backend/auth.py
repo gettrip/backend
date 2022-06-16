@@ -1,10 +1,10 @@
 from flask_httpauth import HTTPTokenAuth
 
-from backend.config import config
+from backend.config import dev_config
 
 auth = HTTPTokenAuth(scheme='Bearer')
 
-app_token = config.server.token
+app_token = dev_config.server.token
 
 tokens = {app_token: 'verified'}
 
