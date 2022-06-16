@@ -1,7 +1,17 @@
-from sqlalchemy import Column, ForeignKey, Integer, PrimaryKeyConstraint, String, UniqueConstraint
+import sys
+
+from sqlalchemy import (
+    Column,
+    ForeignKey,
+    Integer,
+    PrimaryKeyConstraint,
+    String,
+    UniqueConstraint,
+    create_engine,
+)
 from sqlalchemy.orm import RelationshipProperty, relationship
 
-from backend.db import Base, engine
+from backend.db import Base
 
 
 class City(Base):
@@ -110,6 +120,8 @@ class Travel(Base):
 
 
 def main():
+    url = sys.argv[1]
+    engine = create_engine(url)
     Base.metadata.create_all(bind=engine)
 
 
