@@ -40,7 +40,7 @@ class Place(Base):
     image = Column(String())
     description = Column(String())
     duration = Column(Integer, nullable=False)
-    routes: RelationshipProperty = relationship('RoutePoint')
+    routes: RelationshipProperty = relationship('RoutePoint', back_populates='place')
 
     def __str__(self) -> str:
         return 'Place {uid}, {name}'.format(
@@ -58,7 +58,7 @@ class Route(Base):
     image = Column(String())
     description = Column(String())
     duration = Column(Integer, nullable=False)
-    places: RelationshipProperty = relationship('RoutePoint')
+    places: RelationshipProperty = relationship('RoutePoint', back_populates='route')
 
     __table_args__ = (
         UniqueConstraint(name, city_id),
@@ -78,8 +78,8 @@ class RoutePoint(Base):
     place_id = Column(Integer, ForeignKey(Place.uid), nullable=False)
     route_id = Column(Integer, ForeignKey(Route.uid), nullable=False)
     distance = Column(Integer, nullable=False)
-    place: RelationshipProperty = relationship('Place', lazy='joined')
-    route: RelationshipProperty = relationship('Route')
+    place: RelationshipProperty = relationship('Place', lazy='joined', back_populates='routes')
+    route: RelationshipProperty = relationship('Route', back_populates='places')
 
     __table_args__ = (
         UniqueConstraint(place_id, route_id),
@@ -109,9 +109,13 @@ class Travel(Base):
         )
 
 
-def main():
+def create_all():
     Base.metadata.create_all(bind=engine)
 
 
+def drop_all():
+    Base.metadata.drop_all(bind=engine)
+
+
 if __name__ == '__main__':
-    main()
+    create_all()
