@@ -1,6 +1,7 @@
+import flask
 from sqlalchemy.exc import IntegrityError
 
-from backend.db import db_session
+from backend.db import get_db
 from backend.errors import ConflictError, NotFoundError
 from backend.models import Place
 
@@ -27,6 +28,7 @@ class PlaceRepo:
                 description=description,
                 duration=duration,
             )
+            db_session = get_db(flask.current_app.config['db']['url'])
             db_session.add(place)
             db_session.commit()
         except IntegrityError:
@@ -48,6 +50,7 @@ class PlaceRepo:
             place.image = image
             place.description = description
             place.duration = duration
+            db_session = get_db(flask.current_app.config['db']['url'])
             db_session.commit()
         except IntegrityError:
             raise ConflictError(self.name)
@@ -56,5 +59,6 @@ class PlaceRepo:
 
     def delete(self, uid: int) -> None:
         place = Place.query.filter(Place.uid == uid).first()
+        db_session = get_db(flask.current_app.config['db']['url'])
         db_session.delete(place)
         db_session.commit()

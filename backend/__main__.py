@@ -1,7 +1,7 @@
 import logging
 
 from backend.app import create_app
-from backend.config import config
+from backend.config import dev_config
 
 logger = logging.getLogger(__name__)
 
@@ -13,8 +13,8 @@ def main():
     app = create_app()
 
     app.run(
-        port=config.server.port,
-        host=config.server.host,
+        port=dev_config.server.port,
+        host=dev_config.server.host,
         debug=False,
     )
 

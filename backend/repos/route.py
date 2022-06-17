@@ -1,6 +1,8 @@
+
+import flask
 from sqlalchemy.exc import IntegrityError
 
-from backend.db import db_session
+from backend.db import get_db
 from backend.errors import ConflictError, NotFoundError
 from backend.models import Route, RoutePoint
 
@@ -33,6 +35,7 @@ class RouteRepo:
                 description=description,
                 duration=duration,
             )
+            db_session = get_db(flask.current_app.config['db']['url'])
             db_session.add(route)
             db_session.commit()
         except IntegrityError:
@@ -53,6 +56,7 @@ class RouteRepo:
             route.image = image
             route.description = description
             route.duration = duration
+            db_session = get_db(flask.current_app.config['db']['url'])
             db_session.commit()
         except IntegrityError:
             raise ConflictError(self.name)
@@ -60,6 +64,7 @@ class RouteRepo:
         return route
 
     def delete(self, uid: int) -> None:
+        db_session = get_db(flask.current_app.config['db']['url'])
         points = db_session.query(RoutePoint).filter(RoutePoint.route_id == uid)
         for point in points:
             db_session.delete(point)
@@ -77,6 +82,7 @@ class RouteRepo:
                 route_id=route_id,
                 distance=distance,
             )
+            db_session = get_db(flask.current_app.config['db']['url'])
             db_session.add(routepoint)
             db_session.commit()
         except IntegrityError:
@@ -96,5 +102,6 @@ class RouteRepo:
             RoutePoint.route_id == route_id,
             RoutePoint.place_id == place_id,
         ).first()
+        db_session = get_db(flask.current_app.config['db']['url'])
         db_session.delete(point)
         db_session.commit()

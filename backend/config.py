@@ -29,4 +29,7 @@ def load_from_env() -> AppConfig:
     )
 
 
-config = load_from_env()
+dev_config = load_from_env()
+
+test_config = load_from_env()
+test_config.db.url = os.environ['TEST_DB_URL']
