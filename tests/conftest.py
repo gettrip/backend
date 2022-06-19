@@ -4,7 +4,7 @@ from backend.app import create_app
 from backend.models import create_all, drop_all
 from backend.db import db_session, engine
 
-from tests.factories import CityFactory
+from tests.factories import CityFactory, RouteFactory
 
 
 @pytest.fixture(scope='module')
@@ -49,6 +49,7 @@ def session(testapp):
     session = db_session()
 
     CityFactory._meta.sqlalchemy_session = session
+    RouteFactory._meta.sqlalchemy_session = session
 
     yield session
 
