@@ -8,7 +8,7 @@ def test_add_city_successed(client, session):
     assert response.status_code == 201
 
 
-def test_add_city_failed_notvalid(client, session):
+def test_add_city_failed_badrequest(client, session):
     city_data = {'cityname': 'test_city', 'image': 'test_url'}
     response = client.post('/api/v1/cities/', json=city_data)
     assert response.status_code == 400
@@ -66,7 +66,7 @@ def test_update_city_successed(client, session):
     assert city.name == 'test_city'
 
 
-def test_update_city_failed_notvalid(client, session):
+def test_update_city_failed_badrequest(client, session):
     city = CityFactory.create()
     city_data = {'cityname': 'test_city', 'image': 'test_url'}
 
