@@ -14,6 +14,13 @@ def test_add_city_failed_badrequest(client, session):
     assert response.status_code == 400
 
 
+def test_add_city_failed_conflict(client, session):
+    city = CityFactory.create()
+    city_data = {'name': city.name, 'image': 'test_url'}
+    response = client.post('/api/v1/cities/', json=city_data)
+    assert response.status_code == 409
+
+
 def test_get_city_by_uid_successed(client, session):
     cities = []
     for _ in range(10):
