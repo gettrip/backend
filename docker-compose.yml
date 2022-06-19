@@ -9,6 +9,15 @@ services:
     networks:
       - gettrip-backend
 
+  test_db:
+    image: postgres:14
+    env_file:
+      - .env
+    ports:
+      - 5433:5432
+    networks:
+      - gettrip-backend
+
   webapp:
     build: .
     env_file:

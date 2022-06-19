@@ -7,15 +7,15 @@
             "request": "launch",
             "module": "backend",
             "envFile": "${workspaceFolder}/.env",
-            "console": "internalConsole",
+            "console": "internalConsole"
         },
         {
             "name": "create_db",
             "type": "python",
+            "envFile": "${workspaceFolder}/.env",
             "request": "launch",
             "module": "backend.models",
-            "console": "internalConsole",
-            "envFile": "${workspaceFolder}/.env"
-        }
+            "console": "internalConsole"
+        },
     ]
 }
